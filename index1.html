@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Games & PC - O seu Marketplace Gamer</title>
+    
+    <!-- Importando Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Importando FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Configuração de cores -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            primary: '#10b981', // Verde neon
+                            accent: '#8b5cf6',  // Roxo
+                            surface: '#1e293b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal-enter { animation: modalPop 0.3s ease-out; }
+        @keyframes modalPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-brand-dark text-gray-200 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- CABEÇALHO / NAVBAR -->
+    <header class="bg-brand-surface border-b border-gray-700 sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 cursor-pointer group" onclick="window.navegar('home')">
+                <i class="fa-solid fa-gamepad text-3xl text-brand-primary group-hover:rotate-12 transition"></i>
+                <h1 class="text-2xl font-bold text-white tracking-wider">NEXUS<span class="text-brand-primary">GAMES</span></h1>
+            </div>
+
+            <nav class="hidden md:flex gap-6 items-center">
+                <a href="#" onclick="window.navegar('home')" class="hover:text-brand-primary transition font-medium">Início</a>
+                <a href="#" onclick="window.navegar('shop')" class="hover:text-brand-primary transition font-medium">Loja</a>
+                <a href="#" onclick="window.navegar('about')" class="hover:text-brand-primary transition font-medium">Sobre</a>
+                <a href="#" onclick="window.navegar('contact')" class="hover:text-brand-primary transition font-medium">Contato</a>
+            </nav>
+
+            <div class="flex items-center gap-6">
+                <div class="relative cursor-pointer hover:text-brand-primary transition" onclick="window.navegar('cart')">
+                    <i class="fa-solid fa-cart-shopping text-2xl"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-brand-accent text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">0</span>
+                </div>
+                <div id="auth-section">
+                    <!-- Preenchido via JS -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
+    <main id="main-content" class="flex-grow container mx-auto px-4 py-8">
+        
+        <!-- PÁGINA 1: HOME -->
+        <section id="home" class="fade-in block">
+            <div class="bg-gradient-to-r from-brand-surface to-brand-dark p-8 md:p-12 rounded-3xl border border-gray-700 mb-12 text-center md:text-left flex flex-col md:flex-row items-center gap-8 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-brand-primary opacity-5 rounded-full blur-3xl -mr-16 -mt-16"></div>
+                <div class="md:w-1/2 z-10">
+                    <span class="text-brand-accent font-bold tracking-widest text-sm uppercase mb-2 block">Bem-vindo à Nexus</span>
+                    <h2 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">Level Up no seu <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-emerald-400">Setup Gamer</span></h2>
+                    <p class="text-gray-400 mb-8 text-lg">Hardware de alta performance, periféricos de precisão e os lançamentos mais aguardados.</p>
+                    <div class="flex gap-4 justify-center md:justify-start items-center">
+                        <button onclick="window.navegar('shop')" class="bg-brand-primary hover:bg-emerald-600 text-brand-dark font-bold py-3 px-8 rounded-full transition transform hover:scale-105 shadow-lg shadow-emerald-900/50">
+                            Ver Ofertas
+                        </button>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center z-10">
+                    <i class="fa-solid fa-computer text-9xl text-brand-accent opacity-90 drop-shadow-2xl animate-bounce" style="animation-duration: 3s;"></i>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-end mb-8 border-b border-gray-800 pb-4">
+                <h3 class="text-2xl font-bold text-white border-l-4 border-brand-primary pl-4">Destaques da Semana</h3>
+                <a href="#" onclick="window.navegar('shop')" class="text-brand-primary hover:text-white text-sm font-bold transition">Ver todos <i class="fa-solid fa-arrow-right ml-1"></i></a>
+            </div>
+            
+            <div id="featured-products" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <p class="text-gray-500 col-span-full text-center">Carregando catálogo...</p>
+            </div>
+        </section>
+
+        <!-- PÁGINA 2: LOJA (CATÁLOGO) -->
+        <section id="shop" class="fade-in hidden">
+            <h2 class="text-3xl font-bold mb-8 text-white">Catálogo Completo</h2>
+            <div class="flex flex-wrap gap-4 mb-8">
+                <button onclick="window.filtrarProdutos('todos')" class="px-5 py-2 bg-brand-surface rounded-full hover:bg-brand-primary hover:text-brand-dark transition border border-gray-700 text-sm font-medium focus:ring-2 focus:ring-brand-primary">Todos</button>
+                <button onclick="window.filtrarProdutos('hardware')" class="px-5 py-2 bg-brand-surface rounded-full hover:bg-brand-primary hover:text-brand-dark transition border border-gray-700 text-sm font-medium focus:ring-2 focus:ring-brand-primary">Hardware</button>
+                <button onclick="window.filtrarProdutos('perifericos')" class="px-5 py-2 bg-brand-surface rounded-full hover:bg-brand-primary hover:text-brand-dark transition border border-gray-700 text-sm font-medium focus:ring-2 focus:ring-brand-primary">Periféricos</button>
+                <button onclick="window.filtrarProdutos('games')" class="px-5 py-2 bg-brand-surface rounded-full hover:bg-brand-primary hover:text-brand-dark transition border border-gray-700 text-sm font-medium focus:ring-2 focus:ring-brand-primary">Jogos</button>
+            </div>
+            <div id="shop-products" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <p class="text-gray-500 col-span-full text-center">Carregando catálogo...</p>
+            </div>
+        </section>
+
+        <!-- PÁGINA 3: CARRINHO -->
+        <section id="cart" class="fade-in hidden">
+            <h2 class="text-3xl font-bold mb-8 text-white">Seu Carrinho</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 bg-brand-surface p-6 rounded-2xl border border-gray-700 shadow-xl">
+                    <div id="cart-items" class="space-y-4"></div>
+                </div>
+                <div class="bg-brand-surface p-6 rounded-2xl border border-gray-700 h-fit shadow-xl">
+                    <h3 class="text-xl font-bold mb-6 text-white border-b border-gray-700 pb-4">Resumo do Pedido</h3>
+                    <div class="flex justify-between mb-2 text-gray-300">
+                        <span>Subtotal</span>
+                        <span id="cart-subtotal">R$ 0,00</span>
+                    </div>
+                    <div class="flex justify-between mb-4 pb-4 border-b border-gray-600 text-gray-300">
+                        <span>Frete</span>
+                        <span class="text-brand-primary font-medium">Grátis</span>
+                    </div>
+                    <div class="flex justify-between text-2xl font-bold text-white mb-8">
+                        <span>Total</span>
+                        <span id="cart-total">R$ 0,00</span>
+                    </div>
+                    <button onclick="window.finalizarCompra()" class="w-full bg-brand-primary hover:bg-emerald-600 text-brand-dark font-bold py-4 rounded-xl transition shadow-lg transform active:scale-95">
+                        Finalizar Compra
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PÁGINA 4: SOBRE NÓS -->
+        <section id="about" class="fade-in hidden">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-6 text-white">Sobre a Nexus Games</h2>
+                <p class="text-gray-400 mb-4 text-lg">Fundada em 2024 como parte do projeto final do Senac, a Nexus Games nasceu da paixão por tecnologia e jogos.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+                    <div class="p-6 bg-brand-surface rounded-xl border border-gray-700">
+                        <i class="fa-solid fa-rocket text-4xl text-brand-accent mb-4"></i>
+                        <h3 class="font-bold text-white">Inovação</h3>
+                    </div>
+                    <div class="p-6 bg-brand-surface rounded-xl border border-gray-700">
+                        <i class="fa-solid fa-users text-4xl text-brand-primary mb-4"></i>
+                        <h3 class="font-bold text-white">Comunidade</h3>
+                    </div>
+                    <div class="p-6 bg-brand-surface rounded-xl border border-gray-700">
+                        <i class="fa-solid fa-shield-halved text-4xl text-blue-500 mb-4"></i>
+                        <h3 class="font-bold text-white">Segurança</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PÁGINA 5: CONTATO -->
+        <section id="contact" class="fade-in hidden">
+             <div class="max-w-2xl mx-auto bg-brand-surface p-8 rounded-xl border border-gray-700">
+                <h2 class="text-3xl font-bold mb-6 text-white text-center">Fale Conosco</h2>
+                <form onsubmit="event.preventDefault(); alert('Mensagem enviada!');">
+                    <div class="mb-4">
+                        <label class="block text-gray-400 mb-2">Nome</label>
+                        <input type="text" class="w-full bg-brand-dark border border-gray-600 rounded-lg p-3 text-white">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-400 mb-2">E-mail</label>
+                        <input type="email" class="w-full bg-brand-dark border border-gray-600 rounded-lg p-3 text-white">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-400 mb-2">Mensagem</label>
+                        <textarea rows="4" class="w-full bg-brand-dark border border-gray-600 rounded-lg p-3 text-white"></textarea>
+                    </div>
+                    <button class="w-full bg-brand-accent hover:bg-violet-700 text-white font-bold py-3 rounded-lg transition">Enviar Mensagem</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- LOGIN / CADASTRO -->
+        <section id="login" class="fade-in hidden">
+            <div class="max-w-md mx-auto bg-brand-surface p-8 rounded-2xl border border-gray-700 shadow-2xl mt-10">
+                <div class="flex mb-8 bg-brand-dark p-1 rounded-lg">
+                    <button id="tab-login" onclick="window.toggleAuthMode('login')" class="flex-1 py-2 rounded-md text-sm font-bold bg-brand-primary text-brand-dark shadow-sm transition">Entrar</button>
+                    <button id="tab-register" onclick="window.toggleAuthMode('register')" class="flex-1 py-2 rounded-md text-sm font-bold text-gray-400 hover:text-white transition">Cadastrar</button>
+                </div>
+
+                <form id="form-login" class="block">
+                    <h3 class="text-2xl font-bold text-white mb-6 text-center">Bem-vindo de volta!</h3>
+                    <div class="mb-4">
+                        <label class="block text-gray-400 text-sm mb-2">E-mail</label>
+                        <input type="email" id="login-email" required class="w-full bg-brand-dark border border-gray-600 rounded-lg p-3 text-white">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-400 text-sm mb-2">Senha</label>
+                        <input type="password" id="login-senha" required class="w-full bg-brand-dark border border-gray-600 rounded-lg p-3 text-white">
+                    </div>
+                    <button type="submit" class="w-full bg-brand-primary hover:bg-emerald-600 text-brand-dark font-bold py-3 rounded-lg transition shadow-lg">Acessar Conta</button>
+                </form>
+
+                <form id="form-register" class="hidden">
+                    <h3 class="text-2xl font-bold text-white mb-6 text-center">Crie sua conta</h3>
+                    <div class="mb-4">
+                        <label class="block text-gray-400 text-sm mb-2">Nome Completo</label>
+                        <input type="text" id="reg-nome" required class="w-full bg-brand-dark border border-gray-600 rounded-lg p-3 text-white">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-400 text-sm mb-2">CPF (Simulação BD)</label>
+                        <input type="text" id="reg-cpf" required class="w-full bg-brand-dark border border-gray-600 rounded-lg p-3 text-white">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-400 text-sm mb-2">E-mail</label>
+                        <input type="email" id="reg-email" required class="w-full bg-brand-dark border border-gray-600 rounded-lg p-3 text-white">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-400 text-sm mb-2">Senha</label>
+                        <input type="password" id="reg-senha" required class="w-full bg-brand-dark border border-gray-600 rounded-lg p-3 text-white">
+                    </div>
+                    <button type="submit" class="w-full bg-brand-accent hover:bg-violet-700 text-white font-bold py-3 rounded-lg transition shadow-lg">Cadastrar</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-surface border-t border-gray-700 mt-10">
+        <div class="container mx-auto px-4 py-8 text-center text-gray-500">
+            <p>&copy; 2024 Nexus Games & PC.</p>
+        </div>
+    </footer>
+
+    <!-- MODAL / POPUP DE PRODUTO -->
+    <div id="product-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-[100] backdrop-blur-sm transition-opacity" onclick="window.fecharModalSeClicarFora(event)">
+        <div class="bg-brand-surface w-full max-w-4xl rounded-2xl border border-gray-700 shadow-2xl overflow-hidden transform modal-enter relative flex flex-col md:flex-row max-h-[90vh]">
+            <button onclick="window.fecharModal()" class="absolute top-4 right-4 bg-black/50 hover:bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center transition z-10">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="md:w-1/2 bg-brand-dark flex items-center justify-center p-8">
+                <img id="modal-img" src="" alt="" class="max-w-full max-h-[400px] object-contain drop-shadow-lg">
+            </div>
+            <div class="md:w-1/2 p-8 overflow-y-auto">
+                <span id="modal-categoria" class="text-brand-primary text-xs font-bold uppercase tracking-wider border border-brand-primary px-2 py-1 rounded mb-4 inline-block"></span>
+                <h2 id="modal-nome" class="text-3xl font-bold text-white mb-2"></h2>
+                <p id="modal-descricao" class="text-gray-300 mb-6 leading-relaxed"></p>
+                <div class="flex items-end justify-between mb-8">
+                    <div>
+                        <p class="text-gray-400 text-sm line-through">R$ <span id="modal-preco-antigo"></span></p>
+                        <p class="text-4xl font-bold text-white">R$ <span id="modal-preco"></span></p>
+                        <p class="text-emerald-400 text-sm">à vista no Pix</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <button id="modal-btn-add" class="flex-1 bg-brand-primary hover:bg-emerald-600 text-brand-dark font-bold py-4 rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cart-plus"></i> Adicionar ao Carrinho
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT: CONEXÃO COM FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // CONFIGURAÇÃO DO FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzKzWijYU2HVgf1_2_lJYussR-n-mmjrc",
+            authDomain: "ecomerce-task4.firebaseapp.com",
+            projectId: "ecomerce-task4",
+            storageBucket: "ecomerce-task4.firebasestorage.app",
+            messagingSenderId: "272521014806",
+            appId: "1:272521014806:web:304586974283fbbe9a0f37"
+        };
+
+        // Inicializando Firebase
+        let app, auth, db;
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            console.log("Firebase conectado com sucesso!");
+        } catch (e) {
+            console.error("Erro ao conectar ao Firebase:", e);
+        }
+
+        // --- ESTADO DA APLICAÇÃO ---
+        let produtos = [];
+        let carrinho = JSON.parse(localStorage.getItem('carrinho_nexus')) || [];
+        let usuarioAtual = null;
+
+        // --- FUNÇÕES GLOBAIS (Conectadas ao Window para o HTML funcionar) ---
+
+        // 1. Navegação
+        window.navegar = (paginaId) => {
+            document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(paginaId).classList.remove('hidden');
+            window.scrollTo(0, 0);
+            if (paginaId === 'cart') atualizarCarrinhoUI();
+        };
+
+        // 2. Renderização
+        function criarCardProduto(produto) {
+            const precoAntigo = produto.preco_antigo 
+                ? produto.preco_antigo.toFixed(2) 
+                : (produto.preco * 1.2).toFixed(2);
+
+            return `
+                <div class="bg-brand-surface rounded-2xl overflow-hidden border border-gray-700 hover:border-brand-primary transition group shadow-lg flex flex-col h-full cursor-pointer" onclick="window.abrirModalProduto('${produto.id}')">
+                    <div class="relative overflow-hidden h-48 bg-gray-900">
+                        <img src="${produto.img}" alt="${produto.nome}" class="w-full h-full object-contain transform group-hover:scale-110 transition duration-500 p-4">
+                        <span class="absolute top-2 right-2 bg-brand-dark/90 backdrop-blur-sm text-xs px-2 py-1 rounded border border-brand-primary text-brand-primary uppercase font-bold tracking-wider">${produto.categoria}</span>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="font-bold text-white text-lg mb-1 leading-tight group-hover:text-brand-primary transition truncate">${produto.nome}</h3>
+                        <div class="mt-auto pt-4 flex justify-between items-end">
+                            <div>
+                                <p class="text-xs text-gray-500 line-through">R$ ${precoAntigo}</p>
+                                <span class="text-white font-bold text-xl">R$ ${produto.preco.toFixed(2)}</span>
+                            </div>
+                            <button onclick="event.stopPropagation(); window.adicionarAoCarrinho('${produto.id}')" class="bg-brand-primary hover:bg-emerald-500 text-brand-dark w-10 h-10 rounded-full flex items-center justify-center transition shadow-lg transform hover:rotate-12">
+                                <i class="fa-solid fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function carregarProdutosDoFirebase() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "produtos"));
+                produtos = [];
+                querySnapshot.forEach((doc) => {
+                    produtos.push({ id: doc.id, ...doc.data() });
+                });
+                renderizarProdutos();
+                renderizarDestaques();
+            } catch (error) {
+                console.error("Erro ao buscar produtos:", error);
+                document.getElementById('shop-products').innerHTML = '<p class="text-center text-red-400 w-full mt-10">Erro ao carregar produtos. Verifique sua conexão.</p>';
+            }
+        }
+
+        function renderizarProdutos(filtro = 'todos') {
+            const container = document.getElementById('shop-products');
+            if(!container) return;
+            container.innerHTML = '';
+            
+            const lista = filtro === 'todos' ? produtos : produtos.filter(p => p.categoria === filtro);
+            if (lista.length === 0) container.innerHTML = '<p class="text-gray-500 col-span-full text-center">Nenhum produto encontrado.</p>';
+            lista.forEach(p => container.innerHTML += criarCardProduto(p));
+        }
+
+        function renderizarDestaques() {
+            const container = document.getElementById('featured-products');
+            if(!container) return;
+            container.innerHTML = '';
+            // Pega os 4 primeiros ou aleatórios
+            produtos.slice(0, 4).forEach(p => container.innerHTML += criarCardProduto(p));
+        }
+
+        window.filtrarProdutos = (cat) => renderizarProdutos(cat);
+
+        // 3. Modal
+        window.abrirModalProduto = (id) => {
+            const produto = produtos.find(p => p.id === id);
+            if (!produto) return;
+            
+            const precoAntigo = produto.preco_antigo 
+                ? produto.preco_antigo.toFixed(2) 
+                : (produto.preco * 1.2).toFixed(2);
+
+            document.getElementById('modal-img').src = produto.img;
+            document.getElementById('modal-categoria').innerText = produto.categoria;
+            document.getElementById('modal-nome').innerText = produto.nome;
+            document.getElementById('modal-descricao').innerText = produto.desc || "Sem descrição.";
+            document.getElementById('modal-preco').innerText = produto.preco.toFixed(2);
+            document.getElementById('modal-preco-antigo').innerText = precoAntigo;
+            
+            document.getElementById('modal-btn-add').onclick = () => {
+                window.adicionarAoCarrinho(produto.id);
+                window.fecharModal();
+            };
+            document.getElementById('product-modal').classList.remove('hidden');
+            document.getElementById('product-modal').classList.add('flex');
+        }
+
+        window.fecharModal = () => {
+            document.getElementById('product-modal').classList.add('hidden');
+            document.getElementById('product-modal').classList.remove('flex');
+        }
+
+        window.fecharModalSeClicarFora = (e) => {
+            if (e.target.id === 'product-modal') window.fecharModal();
+        }
+
+        // 4. Carrinho
+        window.adicionarAoCarrinho = (id) => {
+            const p = produtos.find(item => item.id === id);
+            const item = carrinho.find(item => item.id === id);
+            if (item) item.qtd++;
+            else carrinho.push({ ...p, qtd: 1 });
+            salvarCarrinho();
+            
+            const cartIcon = document.querySelector('.fa-cart-shopping');
+            cartIcon.classList.add('text-brand-primary', 'scale-125');
+            setTimeout(() => cartIcon.classList.remove('text-brand-primary', 'scale-125'), 300);
+        };
+
+        window.removerDoCarrinho = (index) => {
+            carrinho.splice(index, 1);
+            salvarCarrinho();
+            atualizarCarrinhoUI();
+        };
+
+        function salvarCarrinho() {
+            localStorage.setItem('carrinho_nexus', JSON.stringify(carrinho));
+            document.getElementById('cart-count').innerText = carrinho.reduce((acc, i) => acc + i.qtd, 0);
+        }
+
+        function atualizarCarrinhoUI() {
+            const container = document.getElementById('cart-items');
+            const sub = document.getElementById('cart-subtotal');
+            const tot = document.getElementById('cart-total');
+            container.innerHTML = '';
+            let total = 0;
+
+            if (carrinho.length === 0) {
+                container.innerHTML = `<div class="text-center text-gray-500 py-10">Carrinho vazio.</div>`;
+            } else {
+                carrinho.forEach((item, index) => {
+                    total += item.preco * item.qtd;
+                    container.innerHTML += `
+                        <div class="flex items-center justify-between bg-brand-dark p-4 rounded-xl border border-gray-700">
+                            <div class="flex items-center gap-4">
+                                <img src="${item.img}" class="w-16 h-16 rounded-lg object-contain bg-gray-900 border border-gray-800">
+                                <div>
+                                    <h4 class="font-bold text-white text-sm">${item.nome}</h4>
+                                    <p class="text-xs text-brand-primary font-mono">R$ ${item.preco.toFixed(2)} x ${item.qtd}</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end gap-2">
+                                <p class="font-bold text-white">R$ ${(item.preco * item.qtd).toFixed(2)}</p>
+                                <button onclick="window.removerDoCarrinho(${index})" class="text-xs text-red-500 hover:text-red-400 flex items-center gap-1">
+                                    <i class="fa-solid fa-trash"></i> Remover
+                                </button>
+                            </div>
+                        </div>`;
+                });
+            }
+            sub.innerText = `R$ ${total.toFixed(2)}`;
+            tot.innerText = `R$ ${total.toFixed(2)}`;
+        }
+
+        window.finalizarCompra = () => {
+            if (!usuarioAtual) {
+                alert("Você precisa fazer login para finalizar a compra!");
+                window.navegar('login');
+            } else if (carrinho.length === 0) {
+                alert("Seu carrinho está vazio!");
+            } else {
+                alert(`Compra realizada com sucesso, ${usuarioAtual.displayName || "Cliente"}! Obrigado.`);
+                carrinho = [];
+                salvarCarrinho();
+                window.navegar('home');
+            }
+        };
+
+        // 5. Autenticação
+        window.toggleAuthMode = (mode) => {
+            const loginForm = document.getElementById('form-login');
+            const regForm = document.getElementById('form-register');
+            const tabLogin = document.getElementById('tab-login');
+            const tabReg = document.getElementById('tab-register');
+
+            if (mode === 'login') {
+                loginForm.classList.remove('hidden');
+                regForm.classList.add('hidden');
+                tabLogin.classList.add('bg-brand-primary', 'text-brand-dark');
+                tabLogin.classList.remove('text-gray-400');
+                tabReg.classList.remove('bg-brand-primary', 'text-brand-dark');
+                tabReg.classList.add('text-gray-400');
+            } else {
+                loginForm.classList.add('hidden');
+                regForm.classList.remove('hidden');
+                tabReg.classList.add('bg-brand-primary', 'text-brand-dark');
+                tabReg.classList.remove('text-gray-400');
+                tabLogin.classList.remove('bg-brand-primary', 'text-brand-dark');
+                tabLogin.classList.add('text-gray-400');
+            }
+        };
+
+        document.getElementById('form-login').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const senha = document.getElementById('login-senha').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, senha);
+                alert("Login realizado com sucesso!");
+                window.navegar('home');
+            } catch (error) {
+                alert("Erro ao entrar: " + error.message);
+            }
+        });
+
+        document.getElementById('form-register').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nome = document.getElementById('reg-nome').value;
+            const email = document.getElementById('reg-email').value;
+            const senha = document.getElementById('reg-senha').value;
+            
+            try {
+                const userCred = await createUserWithEmailAndPassword(auth, email, senha);
+                await updateProfile(userCred.user, { displayName: nome });
+                alert("Conta criada com sucesso! Você já está logado.");
+                window.navegar('home');
+            } catch (error) {
+                alert("Erro ao cadastrar: " + error.message);
+            }
+        });
+
+        window.logout = async () => {
+            await signOut(auth);
+            window.location.reload();
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            usuarioAtual = user;
+            const section = document.getElementById('auth-section');
+            if (user) {
+                section.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm font-bold text-brand-primary hidden md:block">Olá, ${user.displayName || 'Gamer'}</span>
+                        <button onclick="window.logout()" class="text-gray-400 hover:text-red-500 transition text-sm">
+                            <i class="fa-solid fa-right-from-bracket"></i> Sair
+                        </button>
+                    </div>`;
+            } else {
+                section.innerHTML = `
+                    <button onclick="window.navegar('login')" class="flex items-center gap-2 bg-brand-surface border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-brand-dark px-4 py-2 rounded-full transition font-bold text-sm">
+                        <i class="fa-regular fa-user"></i> Login
+                    </button>`;
+            }
+        });
+
+        // Inicialização
+        carregarProdutosDoFirebase();
+        salvarCarrinho();
+    </script>
+</body>
+</html>
